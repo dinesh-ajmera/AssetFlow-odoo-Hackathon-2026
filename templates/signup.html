@@ -77,8 +77,8 @@ a{
 <h2>Create Account</h2>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if data %}
-        <div class="msg">{{ data }}</div>
+    {% if messages %}
+        <div class="msg">{{ messages }}</div>
     {% endif %}
 {% endwith %}
 

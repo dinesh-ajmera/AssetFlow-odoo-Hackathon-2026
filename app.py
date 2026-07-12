@@ -97,14 +97,11 @@ def dashboard():
         elif role=="assets_manager":
             return redirect(url_for('assets_manager_dashboard'))
         else:
-            flash("role is not exist")
+            flash("may be role is not assigned yet")
             return render_template("login.html", data="may be role is not assigned yet")
     else:
         return redirect(url_for('login'))
-@app.route('/logout', methods=["POST"])
-def logout():
-    session.clear()
-    return redirect(url_for('welcome'))
+
 
 @app.route('/employee_dashboard')
 def employee_dashboard():
@@ -112,6 +109,7 @@ def employee_dashboard():
         return "wellcom to employee dashboard"
         # return render_template("procurment_dashboard.html")
     else:
+        flash("wrong dashbord trying to access")
         return redirect(url_for('dashboard'))
     
 
@@ -121,14 +119,16 @@ def admin_dashboard():
         # return "wellcom to admin dashboard"
         return render_template("admin_dashboard.html")
     else:
+        flash("wrong dashbord trying to access")
         return redirect(url_for('dashboard'))
     
 @app.route('/deparment_head_dashboard')
 def deparment_head_dashboard():
     if session.get('role')=='deparment_head':
-        return "wellcom to deparment_head_dashboard"
-        # return render_template("vendor_dashboard.html")
+        # return "wellcom to deparment_head_dashboard"
+        return render_template("deparment_head_dashboard.html")
     else:
+        flash("wrong dashbord trying to access")
         return redirect(url_for('dashboard'))
 
    
@@ -138,147 +138,9 @@ def assets_manager_dashboard():
         # return "wellcom to assets_manager_dashboard"
         return render_template("asset_manager_dashboard.html")
     else:
+        flash("wrong dashbord trying to access")
         return redirect(url_for('dashboard'))
 
-
-
-@app.route('/users' ,methods=['POST' ,'GET'])
-def users():
-    if session.get('role')=='admin' :
-        session.get("user_id")
-        try:
-            query=(" select user_id ,f_name ,email ,created_at ,mob_nu , department_id , role from users where role is NULL ")
-            models.cursor.execute(query )
-            result = models.cursor.fetchall()
-            print(result)
-            if result:
-                return render_template('admin_dashboard.html' , result=result , users = result)
-            else:
-                flash(" there is no users available . !!!")
-                return redirect(url_for('dashboard'))
-        except models.mysql.connector.Error as err:
-                print(err)
-                return "something goes wronge while fething rfqs"
-    # elif session.get('role')=='vendor':
-    #     try:
-    #         query=(" select rfq_id ,requested_by ,deadline ,item_name ,qty , discription , categery   from rfqs where status = 'pending' ")
-    #         models.cursor.execute(query )
-    #         result = models.cursor.fetchall()
-    #         print(result)
-    #         if result:
-    #             return render_template('pending_rfqs.html' , result=result)
-    #         else:
-    #             flash(" there is no requests available . !!!")
-    #             return redirect(url_for('dashboard'))
-    #     except models.mysql.connector.Error as err:
-    #             print(err)
-    #             return "something goes wronge while fething rfqs"
-
-    else:
-        return redirect(url_for('login'))
-
-
-
-@app.route('/departments' ,methods=['POST' ,'GET'])
-def departments():
-    if session.get('role')=='admin' :
-        # session.get("user_id")
-        try:
-            query=(" select deparment_id ,deparment_discription ,name ,status  from deparment ")
-            models.cursor.execute(query )
-            result = models.cursor.fetchall()
-            print(result)
-            if result:
-                return render_template('admin_dashboard.html' , result=result)
-            else:
-                flash(" there is no departments available . !!!")
-                return redirect(url_for('dashboard'))
-        except models.mysql.connector.Error as err:
-                print(err)
-                return "something goes wronge while fething rfqs"
-    # elif session.get('role')=='vendor':
-    #     try:
-    #         query=(" select rfq_id ,requested_by ,deadline ,item_name ,qty , discription , categery   from rfqs where status = 'pending' ")
-    #         models.cursor.execute(query )
-    #         result = models.cursor.fetchall()
-    #         print(result)
-    #         if result:
-    #             return render_template('pending_rfqs.html' , result=result)
-    #         else:
-    #             flash(" there is no requests available . !!!")
-    #             return redirect(url_for('dashboard'))
-    #     except models.mysql.connector.Error as err:
-    #             print(err)
-    #             return "something goes wronge while fething rfqs"
-
-    else:
-        return redirect(url_for('login'))
-
-
-@app.route('/assets_catagories' ,methods=['POST' ,'GET'])
-def assets_catagories():
-    if session.get('role')=='admin' :
-        session.get("user_id")
-        try:
-            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
-            models.cursor.execute(query )
-            result = models.cursor.fetchall()
-            print(result)
-            if result:
-                return render_template('admin_dashboard.html' , result=result)
-            else:
-                flash(" there is no catagories available . !!!")
-                return redirect(url_for('dashboard'))
-        except models.mysql.connector.Error as err:
-                print(err)
-                return "something goes wronge while fething rfqs"
-    elif session.get('role')=='assets_manager' :
-        session.get("user_id")
-        try:
-            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
-            models.cursor.execute(query )
-            result = models.cursor.fetchall()
-            print(result)
-            if result:
-                return render_template('asset_manager_dashboard.html' , result=result)
-            else:
-                flash(" there is no catagories available . !!!")
-                return redirect(url_for('dashboard'))
-        except models.mysql.connector.Error as err:
-                print(err)
-                return "something goes wronge while fething rfqs"
-    elif session.get('role')=='deparment_head' :
-        session.get("user_id")
-        try:
-            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
-            models.cursor.execute(query )
-            result = models.cursor.fetchall()
-            print(result)
-            if result:
-                return render_template('deparment_head_dashboard.html' , result=result)
-            else:
-                flash(" there is no catagories available . !!!")
-                return redirect(url_for('dashboard'))
-        except models.mysql.connector.Error as err:
-                print(err)
-                return "something goes wronge while fething rfqs"
-    # elif session.get('role')=='vendor':
-    #     try:
-    #         query=(" select rfq_id ,requested_by ,deadline ,item_name ,qty , discription , categery   from rfqs where status = 'pending' ")
-    #         models.cursor.execute(query )
-    #         result = models.cursor.fetchall()
-    #         print(result)
-    #         if result:
-    #             return render_template('pending_rfqs.html' , result=result)
-    #         else:
-    #             flash(" there is no requests available . !!!")
-    #             return redirect(url_for('dashboard'))
-    #     except models.mysql.connector.Error as err:
-    #             print(err)
-    #             return "something goes wronge while fething rfqs"
-
-    else:
-        return redirect(url_for('login'))
 
 
 
@@ -299,46 +161,94 @@ def create_catagories():
                     models.cnx.commit()
                     return redirect(url_for('dashboard'))
                 except models.mysql.connector.Error as err:
-                    print(err)
-                    return "something goes wrong"
+                    flash(err)
+                    return redirect(url_for('dashboard'))
         else:
+            flash("wrong path used ")
             return redirect(url_for('dashboard'))
     else:
+        flash("acces denied")
         return redirect(url_for('dashboard'))
 
 
-
-@app.route('/add_assets' ,methods=['POST' ,'GET'])
-def add_assets():
-    if  session.get('role') =='assets_manager' :
+@app.route('/create_department' ,methods=['POST' ,'GET'])
+def create_department():
+    if  session.get('role') =='admin' :
         if request.method=='POST':
             name = request.form.get('name')
-            category_id = request.form.get('category_id')
-            if any(not x or str(x).strip() == "" for x in [name , category_id ]):
+            discription = request.form.get('deparment_discription')
+            if any(not x or str(x).strip() == "" for x in [name , discription ]):
                 flash("submited empty data !!")
                 return redirect(url_for('dashboard'))
             else:
                 try:
-                    query=(" insert into assets (created_by ,name ,category_id) values (%s , %s ,%s)")
-                    values=( session.get("user_id") , name , category_id )
+                    query=(" insert into deparment (created_by ,name ,deparment_discription ) values (%s , %s ,%s )")
+                    values=( session.get("user_id") , name , discription )
                     models.cursor.execute(query , values)
                     models.cnx.commit()
                     return redirect(url_for('dashboard'))
                 except models.mysql.connector.Error as err:
-                    print(err)
-                    return "something goes wrong"
+                    flash(err)
+                    return redirect(url_for('dashboard'))
         else:
+            flash("wrong path used ")
             return redirect(url_for('dashboard'))
     else:
+        flash("access denied")
         return redirect(url_for('dashboard'))
+    
 
-
-@app.route('/assets' ,methods=['POST' ,'GET'])
-def assets():
+@app.route('/users' ,methods=['POST' ,'GET'])
+def users():
     if session.get('role')=='admin' :
         session.get("user_id")
         try:
-            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to , status  from assets ")
+            query=(" select user_id ,f_name ,email ,created_at ,mob_nu , department_id , role from users where role is NULL ")
+            models.cursor.execute(query )
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('admin_dashboard.html' , result=result , users = result)
+            else:
+                flash(" there is no users available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                flash(err)
+                return redirect(url_for('dashboard'))
+    
+    else:
+        return redirect(url_for('login'))
+
+
+
+@app.route('/departments' ,methods=['POST' ,'GET'])
+def departments():
+    if session.get('role')=='admin' :
+        try:
+            query=(" select deparment_id ,deparment_discription ,name ,status  from deparment ")
+            models.cursor.execute(query )
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('admin_dashboard.html' , result=result)
+            else:
+                flash(" there is no departments available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                flash(err)
+                return redirect(url_for('dashboard'))
+    
+    else:
+        flash("wrong dashbord trying to access")
+        return redirect(url_for('login'))
+
+
+@app.route('/assets_catagories' ,methods=['POST' ,'GET'])
+def assets_catagories():
+    if session.get('role')=='admin' :
+        session.get("user_id")
+        try:
+            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
             models.cursor.execute(query )
             result = models.cursor.fetchall()
             print(result)
@@ -348,12 +258,12 @@ def assets():
                 flash(" there is no catagories available . !!!")
                 return redirect(url_for('dashboard'))
         except models.mysql.connector.Error as err:
-                print(err)
-                return "something goes wronge while fething rfqs"
+                flash(err)
+                return redirect(url_for('dashboard'))
     elif session.get('role')=='assets_manager' :
         session.get("user_id")
         try:
-            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to_deparment ,allocated_to_employee , status  from assets ")
+            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
             models.cursor.execute(query )
             result = models.cursor.fetchall()
             print(result)
@@ -368,8 +278,8 @@ def assets():
     elif session.get('role')=='deparment_head' :
         session.get("user_id")
         try:
-            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to , status  from assets where allocated_to_deparment select department_id from users where user_id = %s  ")
-            models.cursor.execute(query , session.get('user_id'))
+            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
+            models.cursor.execute(query )
             result = models.cursor.fetchall()
             print(result)
             if result:
@@ -380,23 +290,10 @@ def assets():
         except models.mysql.connector.Error as err:
                 print(err)
                 return "something goes wronge while fething rfqs"
-    # elif session.get('role')=='vendor':
-    #     try:
-    #         query=(" select rfq_id ,requested_by ,deadline ,item_name ,qty , discription , categery   from rfqs where status = 'pending' ")
-    #         models.cursor.execute(query )
-    #         result = models.cursor.fetchall()
-    #         print(result)
-    #         if result:
-    #             return render_template('pending_rfqs.html' , result=result)
-    #         else:
-    #             flash(" there is no requests available . !!!")
-    #             return redirect(url_for('dashboard'))
-    #     except models.mysql.connector.Error as err:
-    #             print(err)
-    #             return "something goes wronge while fething rfqs"
-
+    
     else:
         return redirect(url_for('login'))
+
 
 
 @app.route('/allocate_roles' ,methods=['POST' ,'GET'])
@@ -418,12 +315,97 @@ def allocate_roles():
                     models.cnx.commit()
                     return redirect(url_for('dashboard'))
                 except models.mysql.connector.Error as err:
-                    print(err)
-                    return "something goes wrong"
+                    flash(err)
+                    return redirect(url_for('dashboard'))
         else:
+            flash("wrong path choosed ")
             return redirect(url_for('dashboard'))
     else:
+        flash("access denied")
         return redirect(url_for('dashboard'))
+
+
+
+@app.route('/add_assets' ,methods=['POST' ,'GET'])
+def add_assets():
+    if  session.get('role') =='assets_manager' :
+        if request.method=='POST':
+            name = request.form.get('name')
+            category_id = request.form.get('category_id')
+            if any(not x or str(x).strip() == "" for x in [name , category_id ]):
+                flash("submited empty data !!")
+                return redirect(url_for('dashboard'))
+            else:
+                try:
+                    query=(" insert into assets (created_by ,name ,category_id) values (%s , %s ,%s)")
+                    values=( session.get("user_id") , name , category_id )
+                    models.cursor.execute(query , values)
+                    models.cnx.commit()
+                    return redirect(url_for('dashboard'))
+                except models.mysql.connector.Error as err:
+                    flash(err)
+                    return redirect(url_for('dashboard'))
+        else:
+            flash("wrong path used ")
+            return redirect(url_for('dashboard'))
+    else:
+        flash("acces denied")
+        return redirect(url_for('dashboard'))
+
+
+@app.route('/assets' ,methods=['POST' ,'GET'])
+def assets():
+    if session.get('role')=='admin' :
+        session.get("user_id")
+        try:
+            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to , status  from assets ")
+            models.cursor.execute(query )
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('admin_dashboard.html' , result=result)
+            else:
+                flash(" there is no catagories available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                flash(err)
+                return redirect(url_for('dashboard'))
+    elif session.get('role')=='assets_manager' :
+        session.get("user_id")
+        try:
+            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to_deparment ,allocated_to_employee , status  from assets ")
+            models.cursor.execute(query )
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('asset_manager_dashboard.html' , result=result)
+            else:
+                flash(" there is no catagories available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                flash(err)
+                return redirect(url_for('dashboard'))
+    elif session.get('role')=='deparment_head' :
+        session.get("user_id")
+        try:
+            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to_employee , status  from assets where allocated_to_deparment = (select department_id from users where user_id = %s) and status ='Available' ")
+            value=(session.get('user_id') ,)
+            models.cursor.execute(query ,value )
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('deparment_head_dashboard.html' , result=result)
+            else:
+                flash(" there is no catagories available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                flash(err)
+                return redirect(url_for('dashboard'))
+   
+    else:
+        flash("access denied")
+        return redirect(url_for('dashboard'))
+
 
 
 
@@ -441,68 +423,103 @@ def allocate_assets_to_deparment():
             
             else:
                 try:
-                    query=(" select status , allocated_to_deparment from assets where asset_id = %s")
+                    query=(" select status , allocated_to_deparment ,allocated_to_employee from assets where asset_id = %s")
                     values=(   asset_id  , )
                     models.cursor.execute(query , values)
                     result = models.cursor.fetchone()
                     print(result)
                     if result:
                         if result[0] =='Available' and result[1]==None:
-                            query=(" update assets set allocated_to_deparment =%s  , status = 'Allocated' where asset_id = %s")
+                            query=(" update assets set allocated_to_deparment =%s  where asset_id = %s")
                             values=(  deprtment_id , asset_id   )
                             models.cursor.execute(query , values)
                             models.cnx.commit()
+                            flash("allocation succsesfully done !!")
                             return redirect(url_for('dashboard'))
                         elif result[0] =='Reserved' :
-                            return "Reserved for futur use"
+                            flash("Reserved for futur use")
+                            return redirect(url_for('dashboard'))
                         elif result[0] =='Allocated' and result[1]  :
-                            return f"allocated already Allocated to department {result[1]}"
+                            flash(f"allocated already Allocated to {result[2]} from department {result[1]}")
+                            return redirect(url_for('dashboard'))
                         elif result[0] =='Under_Maintenance' :
-                            return "Under_Maintenance"
+                            flash("asset is under maintainace ")
+                            return redirect(url_for('dashboard'))
                         else:
-                            return "asste is no more sory"
+                            flash("asset is no more in use")
+                            return redirect(url_for('dashboard'))
                     else:
-                        return "there is no assets"
+                        flash("ther is no assets ")
+                        return redirect(url_for('dashboard'))
 
                 except models.mysql.connector.Error as err:
-                    print(err)
-                    return "something goes wrong"
+                    flash(err)
+                    return redirect(url_for('dashboard'))
         else:
+            flash("wrong path used ")
             return redirect(url_for('dashboard'))
     else:
+        flash("access denied")
         return redirect(url_for('dashboard'))
 
 
 
-
-
-
-
-
-
-@app.route('/create_department' ,methods=['POST' ,'GET'])
-def create_department():
-    if  session.get('role') =='admin' :
+@app.route('/allocate_assets_to_employee' ,methods=['POST' ,'GET'])
+def allocate_assets_to_employee():
+    if  session.get('role') =='deparment_head' :
         if request.method=='POST':
-            name = request.form.get('name')
-            discription = request.form.get('deparment_discription')
-            if any(not x or str(x).strip() == "" for x in [name , discription ]):
+            asset_id = request.form.get('asset_id')
+            user_id = request.form.get('user_id')
+
+            if any(not x or str(x).strip() == "" for x in [asset_id , user_id ]):
                 flash("submited empty data !!")
                 return redirect(url_for('dashboard'))
+            
             else:
                 try:
-                    query=(" insert into deparment (created_by ,name ,deparment_discription ) values (%s , %s ,%s )")
-                    values=( session.get("user_id") , name , discription )
+                    query=(" select status , allocated_to_employee from assets where asset_id = %s")
+                    values=(   asset_id  , )
                     models.cursor.execute(query , values)
-                    models.cnx.commit()
-                    return redirect(url_for('dashboard'))
+                    result = models.cursor.fetchone()
+                    print(result)
+                    if result:
+                        if result[0] =='Allocated' and result[1]==None:
+                            query=(" update assets set allocated_to_employee =%s  , status = 'Allocated' where asset_id = %s")
+                            values=(  user_id , asset_id   )
+                            models.cursor.execute(query , values)
+                            models.cnx.commit()
+                            flash("allocation succsesfully done !!")
+                            return redirect(url_for('dashboard'))
+                        elif result[0] =='Reserved' :
+                            flash("Reserved for futur use")
+                            return redirect(url_for('dashboard'))
+                        elif result[0] =='Allocated' and result[1]  :
+                            flash(f"allocated already Allocated to  {result[1]}")
+                            return redirect(url_for('dashboard'))
+                        elif result[0] =='Under_Maintenance' :
+                            flash("asset is under maintainace ")
+                            return redirect(url_for('dashboard'))
+                        else:
+                            flash("asset is no more in use")
+                            return redirect(url_for('dashboard'))
+                    else:
+                        flash("ther is no assets ")
+                        return redirect(url_for('dashboard'))
+
                 except models.mysql.connector.Error as err:
-                    print(err)
-                    return "something goes wrong"
+                    flash(err)
+                    return redirect(url_for('dashboard'))
         else:
+            flash("wrong path used ")
             return redirect(url_for('dashboard'))
     else:
+        flash("acces denied")
         return redirect(url_for('dashboard'))
+
+@app.route('/logout', methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for('welcome'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

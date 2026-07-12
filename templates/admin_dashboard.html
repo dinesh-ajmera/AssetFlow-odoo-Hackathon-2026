@@ -4,6 +4,11 @@
 <h2>manager dashboard </h2>
 
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="msg">{{ messages }}</div>
+    {% endif %}
+{% endwith %}
 
 
 <form action="/users" method="post">
@@ -23,6 +28,13 @@
 
 
 
+
+
+
+
+<form action="/logout" method="post">
+<button type="submit">Logout</button>
+</form>
 
 
 
