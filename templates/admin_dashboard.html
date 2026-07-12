@@ -45,7 +45,7 @@
 <summary> create department</summary>
 <form action="/create_department" method="post" >
     
-    <input type="text" name="name" required >
+    <input type="text" name="name" placeholder="deparment name" required >
     <input type="text" name="deparment_discription" placeholder="add discription"  required>
     
 
@@ -61,7 +61,7 @@
 
 <form action="/create_catagories" method="post" class="leave-form">
     
-    <input type="text" name="name" required >
+    <input type="text" name="name" placeholder=" catagorie  name" >
     <input type="text" name="catagorie_discription" placeholder="add discription"  required>
     
 
@@ -83,7 +83,7 @@
 <br>
 <form action="/allocate_roles" method="post" class="leave-form">
 
-    <input type="text" name="department_id" required >
+    <input type="text" name="department_id" placeholder=" deparment id" required >
     <input type="hidden" name="user_id" value="{{ i[0] }}">
     <select name="role" >
         <option value="employee">employee</option>
@@ -101,7 +101,7 @@
 
 
 
-
+<br><br><br>
 
 
 {% if result %}
