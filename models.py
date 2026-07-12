@@ -22,8 +22,8 @@ TABLES['deparment']=(
         "created_by int not null ,"
         "name varchar(200) not null ,"
         "deparment_discription varchar(200) not null ,"
-        "deparment_head int not null, "
-        "foreign key(deparment_head) references users(user_id) ,"
+        #"deparment_head int not null, "
+        #"foreign key(deparment_head) references users(user_id) ,"
 	    "status Enum('active' ,'Inactive' ) default 'active' "
         ")ENGINE=InnoDB"
     )
