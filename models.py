@@ -20,8 +20,11 @@ TABLES['deparment']=(
     "create	table deparment("
         "deparment_id int   primary key auto_increment , "
         "created_by int not null ,"
-        "name varchar(50) not null ,"
-	"status Enum('active' ,'Inactive' ) default 'active' "
+        "name varchar(200) not null ,"
+        "deparment_discription varchar(200) not null ,"
+        "deparment_head int not null, "
+        "foreign key(deparment_head) references users(user_id) ,"
+	    "status Enum('active' ,'Inactive' ) default 'active' "
         ")ENGINE=InnoDB"
     )
 
@@ -35,9 +38,9 @@ TABLES['users']=(
         "password VARCHAR(255) NOT NULL,"
         "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
         "mob_nu char(12) not null , "
-	"department_id int default null ,"
+	    "department_id int default null ,"
         "role ENUM('employee', 'deparment_head','assets_manager' ) DEFAULT  NULL ,"
-	"foreign key(department_id) references deparment(deparment_id) "
+	    "foreign key(department_id) references deparment(deparment_id) "
         
         
         ")ENGINE=InnoDB"
@@ -46,8 +49,10 @@ TABLES['users']=(
 TABLES['assets_catagories']=(
     "create	table assets_catagories("
         "catagories_id int   primary key NOT NULL auto_increment, "
+        "created_by int not null ,"
         "name varchar(100) not null ,"
-	"created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP "
+        "catagorie_discription varchar(200) not null ,"
+	    "created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP "
         ")ENGINE=InnoDB"
     )
 
@@ -59,28 +64,31 @@ TABLES['assets']=(
         "asset_id int   primary key NOT NULL auto_increment, "
         "name varchar(30) not null ,"
 	    "category_id int not null, "
+        "created_by int not null ,"
+        #"Asset Tag varchar(10) UNIQUE NOT NULL "
         
         "aquasition_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
-	    "allocated_to int default null ," 
+	    "allocated_to_deparment int default null ," 
+        "allocated_to_employee int default null ,"
         
         "status ENUM('Available', 'Allocated','Reserved' ,'Under_Maintenance', 'Lost' ,'Retired' ,'Disposed' ) DEFAULT  'Available' , "
 	    "foreign key(category_id) references assets_catagories(catagories_id) ,"
-	    "foreign key(allocated_to) references users(user_id)"
-        
+	    "foreign key(allocated_to_deparment) references deparment(deparment_id),"
+        "foreign key(allocated_to_employee) references users(user_id)"
         
         ")ENGINE=InnoDB"
     )
 
 
 
-TABLES['allocation']=(
-    "create	table allocation("
+TABLES['resource_booking']=(
+    "create	table resource_booking("
         "allocation_id int   primary key auto_increment , "
         "asset_id int not null ,"
         "user_id int not null ,"
-	    "allocated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-	    "allocation_type Enum('permanent_allocated' ,'time_slot_allocated' ) default null ,"
-	    "returning_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+	    "allocation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+	   
+	    "returning_time TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP  ,"
 
         "status ENUM('Upcoming', 'Ongoing' , 'Completed' , 'Cancelled') DEFAULT  'Upcoming'  , "
         "foreign key(asset_id) references assets(asset_id) ,"
