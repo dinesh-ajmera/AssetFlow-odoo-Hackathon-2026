@@ -147,7 +147,7 @@ def users():
     if session.get('role')=='admin' :
         session.get("user_id")
         try:
-            query=(" select user_id ,f_name ,email ,created_at ,mob_nu , department_id , role from users ")
+            query=(" select user_id ,f_name ,email ,created_at ,mob_nu , department_id , role from users where role is NULL ")
             models.cursor.execute(query )
             result = models.cursor.fetchall()
             print(result)
@@ -247,6 +247,21 @@ def assets_catagories():
         except models.mysql.connector.Error as err:
                 print(err)
                 return "something goes wronge while fething rfqs"
+    elif session.get('role')=='deparment_head' :
+        session.get("user_id")
+        try:
+            query=(" select catagories_id ,name ,created_at  from assets_catagories ")
+            models.cursor.execute(query )
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('deparment_head_dashboard.html' , result=result)
+            else:
+                flash(" there is no catagories available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                print(err)
+                return "something goes wronge while fething rfqs"
     # elif session.get('role')=='vendor':
     #     try:
     #         query=(" select rfq_id ,requested_by ,deadline ,item_name ,qty , discription , categery   from rfqs where status = 'pending' ")
@@ -338,12 +353,27 @@ def assets():
     elif session.get('role')=='assets_manager' :
         session.get("user_id")
         try:
-            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to , status  from assets ")
+            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to_deparment ,allocated_to_employee , status  from assets ")
             models.cursor.execute(query )
             result = models.cursor.fetchall()
             print(result)
             if result:
                 return render_template('asset_manager_dashboard.html' , result=result)
+            else:
+                flash(" there is no catagories available . !!!")
+                return redirect(url_for('dashboard'))
+        except models.mysql.connector.Error as err:
+                print(err)
+                return "something goes wronge while fething rfqs"
+    elif session.get('role')=='deparment_head' :
+        session.get("user_id")
+        try:
+            query=(" select asset_id ,name ,category_id , created_by , aquasition_date , allocated_to , status  from assets where allocated_to_deparment select department_id from users where user_id = %s  ")
+            models.cursor.execute(query , session.get('user_id'))
+            result = models.cursor.fetchall()
+            print(result)
+            if result:
+                return render_template('deparment_head_dashboard.html' , result=result)
             else:
                 flash(" there is no catagories available . !!!")
                 return redirect(url_for('dashboard'))
@@ -411,14 +441,14 @@ def allocate_assets_to_deparment():
             
             else:
                 try:
-                    query=(" select status , allocated_to from assets where asset_id = %s")
+                    query=(" select status , allocated_to_deparment from assets where asset_id = %s")
                     values=(   asset_id  , )
                     models.cursor.execute(query , values)
                     result = models.cursor.fetchone()
                     print(result)
                     if result:
                         if result[0] =='Available' and result[1]==None:
-                            query=(" update assets set allocated_to =%s  , status = 'Allocated' where asset_id = %s")
+                            query=(" update assets set allocated_to_deparment =%s  , status = 'Allocated' where asset_id = %s")
                             values=(  deprtment_id , asset_id   )
                             models.cursor.execute(query , values)
                             models.cnx.commit()
@@ -456,14 +486,13 @@ def create_department():
         if request.method=='POST':
             name = request.form.get('name')
             discription = request.form.get('deparment_discription')
-            deparment_head = request.form.get('deparment_head')
-            if any(not x or str(x).strip() == "" for x in [name , discription ,deparment_head ]):
+            if any(not x or str(x).strip() == "" for x in [name , discription ]):
                 flash("submited empty data !!")
                 return redirect(url_for('dashboard'))
             else:
                 try:
-                    query=(" insert into deparment (created_by ,name ,deparment_discription , deparment_head) values (%s , %s ,%s ,%s)")
-                    values=( session.get("user_id") , name , discription ,deparment_head )
+                    query=(" insert into deparment (created_by ,name ,deparment_discription ) values (%s , %s ,%s )")
+                    values=( session.get("user_id") , name , discription )
                     models.cursor.execute(query , values)
                     models.cnx.commit()
                     return redirect(url_for('dashboard'))
