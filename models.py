@@ -15,32 +15,6 @@ cursor =None
 TABLES ={}
 
 
-TABLES['users']=(
-    "create	table users("
-        "user_id int   primary key NOT NULL auto_increment, "
-        "f_name varchar(30) not null ,"
-        "l_name VARCHAR(50) NOT NULL,"
-        "email VARCHAR(100) UNIQUE NOT NULL,"
-        "password VARCHAR(255) NOT NULL,"
-        "created_at TIMESTAMP  CURRENT_TIMESTAMP ,"
-        "mob_nu char(12) not null , "
-	"department_id int default null"
-        "role ENUM('employee', 'deparment_head','assets_manager' ) DEFAULT  NULL "
-	"foreign key(department_id) references deparment(deparment_id)"
-        
-        
-        ")ENGINE=InnoDB"
-    )
-
-TABLES['assets_catagories']=(
-    "create	table assets_catagories("
-        "catagories_id int   primary key NOT NULL auto_increment, "
-        "name varchar(100) not null ,"
-	"created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
-        ")ENGINE=InnoDB"
-    )
-
-
 
 TABLES['deparment']=(
     "create	table deparment("
@@ -52,18 +26,46 @@ TABLES['deparment']=(
     )
 
 
+TABLES['users']=(
+    "create	table users("
+        "user_id int   primary key NOT NULL auto_increment, "
+        "f_name varchar(30) not null ,"
+        "l_name VARCHAR(50) NOT NULL,"
+        "email VARCHAR(100) UNIQUE NOT NULL,"
+        "password VARCHAR(255) NOT NULL,"
+        "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+        "mob_nu char(12) not null , "
+	"department_id int default null ,"
+        "role ENUM('employee', 'deparment_head','assets_manager' ) DEFAULT  NULL ,"
+	"foreign key(department_id) references deparment(deparment_id) "
+        
+        
+        ")ENGINE=InnoDB"
+    )
+
+TABLES['assets_catagories']=(
+    "create	table assets_catagories("
+        "catagories_id int   primary key NOT NULL auto_increment, "
+        "name varchar(100) not null ,"
+	"created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP "
+        ")ENGINE=InnoDB"
+    )
+
+
+
+
 TABLES['assets']=(
     "create	table assets("
         "asset_id int   primary key NOT NULL auto_increment, "
         "name varchar(30) not null ,"
-	"category_id int not null, "
+	    "category_id int not null, "
         
-        "aquasition_date TIMESTAMP  CURRENT_TIMESTAMP ,"
-	"allocated_to int default null ," 
+        "aquasition_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
+	    "allocated_to int default null ," 
         
-        "status ENUM('Available', 'Allocated','Reserved' ,'Under_Maintenance' 'Lost' ,'Retired' ,'Disposed' ) DEFAULT  'Available' "
-	"foreign key(category_id) references assets_catagories(catagories_id) ,"
-	"foreign key(allocated_to) references users(user_id)"
+        "status ENUM('Available', 'Allocated','Reserved' ,'Under_Maintenance', 'Lost' ,'Retired' ,'Disposed' ) DEFAULT  'Available' , "
+	    "foreign key(category_id) references assets_catagories(catagories_id) ,"
+	    "foreign key(allocated_to) references users(user_id)"
         
         
         ")ENGINE=InnoDB"
@@ -76,11 +78,11 @@ TABLES['allocation']=(
         "allocation_id int   primary key auto_increment , "
         "asset_id int not null ,"
         "user_id int not null ,"
-	"allocated_at TIMESTAMP  CURRENT_TIMESTAMP ,"
-	"allocation_type Enum('permanent_allocated' ,'time_slot_allocated' ) default null ,"
-	"returning_time TIMESTAMP DEFAULT NULL  ,"
+	    "allocated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+	    "allocation_type Enum('permanent_allocated' ,'time_slot_allocated' ) default null ,"
+	    "returning_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
 
-        "status ENUM('Upcoming', 'Ongoing' , 'Completed' , 'Cancelled') DEFAULT  'pending'  , "
+        "status ENUM('Upcoming', 'Ongoing' , 'Completed' , 'Cancelled') DEFAULT  'Upcoming'  , "
         "foreign key(asset_id) references assets(asset_id) ,"
         "foreign key(user_id) references users(user_id)"
         
@@ -94,7 +96,7 @@ TABLES['maintenance']=(
         "asset_id int not null ,"
         "requested_by int not null ,"
 	"approved_by int not null ,"
-	"requested_at TIMESTAMP   CURRENT_TIMESTAMP ,"
+	"requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
 	"issue_discription varchar(200) not null ,"
         "status ENUM('Pending', 'Approved' , 'Rejected' , 'Technician Assigned') DEFAULT  'pending'  , "
         "foreign key(asset_id) references assets(asset_id),"
