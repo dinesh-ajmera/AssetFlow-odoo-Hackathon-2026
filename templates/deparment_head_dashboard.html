@@ -1,0 +1,108 @@
+
+
+
+<h2>manager dashboard </h2>
+
+
+
+<form action="/assets_catagories" method="post">
+<button type="submit">catagories</button>
+</form>
+<br>
+
+<form action="/assets" method="post">
+<button type="submit">assets</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+<details>
+<summary> allocate asset </summary>
+
+
+{% if result %}
+{% for i in result %}
+{{i[1]}}
+<br>
+<form action="/allocate_assets_to_employee" method="post">
+    
+    <input type="hidden" name="asset_id" value="{{i[0]}}" required >
+    <input type="text" name="user_id" placeholder="employee id"  required>
+    
+    
+    
+
+
+    <button type="submit">allocat assets</button>
+
+</form>
+
+{%endfor%}
+{%endif%}
+<br>
+</details>
+
+
+
+
+
+
+
+
+{% if result %}
+{% for i in result %}
+{{i}}
+<br>
+{%endfor%}
+{%endif%}
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<form action="/pending_quatations" method="post">
+<button type="submit"> pending quatation </button>
+</form>
+
+
+
+
+
+
+<form action="/logout" method="post">
+<button type="submit">Logout</button>
+</form>
+
+ -->

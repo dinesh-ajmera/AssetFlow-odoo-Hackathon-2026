@@ -1,0 +1,46 @@
+
+
+<h2>Pending  Requests for approval</h2>
+
+{% if result %}
+
+{% for i in result %}
+
+<div class="card">
+
+<div class="row"><b>Request ID:</b> {{ i[0] }}</div>
+<div class="row"><b>Employee:</b> {{ i[1] }}</div>
+<div class="row"><b>Leave Start:</b> {{ i[2] }}</div>
+<div class="row"><b>Leave End:</b> {{ i[3] }}</div>
+<div class="row"><b>Employee Comment:</b> {{ i[4] }}</div>
+<div class="row"><b>Requested At:</b> {{ i[5] }}</div>
+
+<form action="/procurment_responce" method="post">
+
+<input type="hidden" name="quatations_id" value="{{i[0]}}">
+<input type="hidden" name="rfq_id" value="{{i[1]}}">
+
+
+<div class="toggle">
+
+<label>
+<input type="radio" name="responce" value="procurment_approved" checked>
+Approve
+</label>
+
+<label>
+<input type="radio" name="responce" value="rejected">
+Reject
+</label>
+
+</div>
+
+<button type="submit">Submit</button>
+
+</form>
+
+</div>
+
+{% endfor %}
+
+{% endif %}

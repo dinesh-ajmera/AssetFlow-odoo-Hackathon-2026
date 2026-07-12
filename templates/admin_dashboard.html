@@ -1,0 +1,142 @@
+
+
+
+<h2>manager dashboard </h2>
+
+
+
+
+<form action="/users" method="post">
+<button type="submit">users</button>
+</form>
+
+<form action="/departments" method="post">
+<button type="submit">departments</button>
+</form> 
+
+
+<form action="/assets_catagories" method="post">
+<button type="submit">catagories</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+<details>
+<summary> create department</summary>
+<form action="/create_department" method="post" >
+    
+    <input type="text" name="name" required >
+    <input type="text" name="deparment_discription" placeholder="add discription"  required>
+    
+
+
+    <button type="submit">create_department</button>
+
+</form>
+
+</details>
+
+<details>
+<summary> create asset catagories</summary>
+
+<form action="/create_catagories" method="post" class="leave-form">
+    
+    <input type="text" name="name" required >
+    <input type="text" name="catagorie_discription" placeholder="add discription"  required>
+    
+
+
+    <button type="submit">create_catagories</button>
+
+</form>
+</details>
+
+
+<details>
+<summary> give roles to user </summary>
+
+{% if users %}
+{% for i in users %}
+
+<br>
+{{ i[1] }}
+<br>
+<form action="/allocate_roles" method="post" class="leave-form">
+
+    <input type="text" name="department_id" required >
+    <input type="hidden" name="user_id" value="{{ i[0] }}">
+    <select name="role" >
+        <option value="employee">employee</option>
+        <option value="deparment_head">deparment head</option>
+        <option value="assets_manager">assets manager</option>
+    </select>
+
+
+    <button type="submit">promote_employee</button>
+
+</form> 
+{%endfor%}
+{%endif%}
+</details>
+
+
+
+
+
+
+{% if result %}
+{% for i in result %}
+{{i}}
+<br>
+{%endfor%}
+{%endif%}
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<form action="/pending_quatations" method="post">
+<button type="submit"> pending quatation </button>
+</form>
+
+
+
+
+
+
+<form action="/logout" method="post">
+<button type="submit">Logout</button>
+</form>
+
+ -->

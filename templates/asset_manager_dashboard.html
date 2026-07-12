@@ -1,0 +1,123 @@
+
+
+
+<h2>manager dashboard </h2>
+
+
+
+<form action="/assets_catagories" method="post">
+<button type="submit">catagories</button>
+</form>
+<br>
+
+<form action="/assets" method="post">
+<button type="submit">assets</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+<details>
+<summary> add assets </summary>
+
+<form action="/add_assets" method="post" class="leave-form">
+    
+    <input type="text" name="name" required >
+    <input type="text" name="category_id" placeholder="category id"  required>
+    
+
+
+    <button type="submit">create_catagories</button>
+
+</form>
+</details>
+
+
+
+
+<details>
+<summary> allocate asset </summary>
+
+
+{% if result %}
+{% for i in result %}
+{{i[1]}}
+<br>
+<form action="/allocate_assets_to_deparment" method="post" class="leave-form">
+    
+    <input type="hidden" name="asset_id" value="{{i[0]}}" required >
+    <input type="text" name="deprtment_id" placeholder="deprtment id"  required>
+    
+    
+
+
+    <button type="submit">allocat assets</button>
+
+</form>
+
+{%endfor%}
+{%endif%}
+<br>
+</details>
+
+
+
+
+
+
+
+
+{% if result %}
+{% for i in result %}
+{{i}}
+<br>
+{%endfor%}
+{%endif%}
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<form action="/pending_quatations" method="post">
+<button type="submit"> pending quatation </button>
+</form>
+
+
+
+
+
+
+<form action="/logout" method="post">
+<button type="submit">Logout</button>
+</form>
+
+ -->
